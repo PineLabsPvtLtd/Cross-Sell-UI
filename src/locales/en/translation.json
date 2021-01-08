@@ -1,6 +1,21 @@
 {
-    "welcome": "Welcome Aboard!",
+    "common": {
+        "welcome": "Welcome Aboard!",
+        "congratulation": "Congratulations!!"
+    },
     "errors": {
         "404": "Page not found"
-    }
+    },
+    "home": {
+        "citation": "You may choose to apply for and avail a pre approved personal loan of up to",
+        "buttonText": "Customise"
+    },
+    "customise": {
+        "title": "Customise your loan amount & EMI",
+        "amount": "Select Loan Amount",
+        "tenure": "Select Tenure",
+        "emi": "Your EMI/Month will be*",
+        "buttonText": "Submit"
+    },
+    "currency": "₹"
 }

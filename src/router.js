@@ -8,9 +8,9 @@ import {
 import Grid from '@material-ui/core/Grid';
 import Zoom from '@material-ui/core/Zoom';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
 
 import PageNotFound from 'common/error';
+import Home from 'containers/home';
 
 export default function App() {
     return (
@@ -33,9 +33,7 @@ export default function App() {
                 <Router>
                     <Switch>
                         <Route exact path="/">
-                            <Button variant="contained" color="primary">
-                                Hello World
-                            </Button>
+                            <Home/>
                         </Route>
                         <Route path="*">
                             <PageNotFound/>
