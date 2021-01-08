@@ -4,7 +4,7 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 
 import { ReactComponent as CongratsImage } from './assets/congrats.svg';
-import CustomizeDialog from 'containers/customise';
+import CustomiseDialog from 'containers/customise';
 
 import useStyles from './styles';
 import { useTranslation } from 'react-i18next';
@@ -48,7 +48,7 @@ export default function Home() {
                     </Grid>
                 </Grid>
             </div>
-            <CustomizeDialog dialogOpen={dialogOpen} toggleDialog={toggleDialog}/>
+            <CustomiseDialog dialogOpen={dialogOpen} toggleDialog={toggleDialog}/>
         </Container>
     );
 }

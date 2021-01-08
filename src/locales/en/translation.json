@@ -17,5 +17,15 @@
         "emi": "Your EMI/Month will be*",
         "buttonText": "Submit"
     },
+    "confirmation": {
+        "title": "Great! Let's confirm what you selected",
+        "amount": "Loan Value",
+        "tenure": "Tenure",
+        "emi": "EMI",
+        "interest": "Interest",
+        "proceed": "Proceed to apply for loan",
+        "proceedButtonText": "LET'S PROCEED",
+        "reviewButtonText": "LET'S REVIEW"
+    },
     "currency": "₹"
 }
