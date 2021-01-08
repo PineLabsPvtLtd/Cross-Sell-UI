@@ -35,7 +35,10 @@ export default function Home() {
                     </Typography></Grid>
                     <Grid item>
                         <Typography variant="h4" align="center">
-                            {`${t('currency')} 10,00,000.00`}
+                            {new Intl.NumberFormat('en-IN', {
+                                style: 'currency',
+                                currency: 'INR'
+                            }).format(100000)}
                         </Typography>
                     </Grid>
                     <Grid item align="center" xs={12}>

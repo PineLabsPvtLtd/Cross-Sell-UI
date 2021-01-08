@@ -1,10 +1,12 @@
-import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import TextField from '@material-ui/core/TextField';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CurrencyTextField from '@unicef/material-ui-currency-textfield';
+
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,9 +46,10 @@ theme.props = {
     },
 };
 
-export default function InputSlider({ title, defaultValue, maxValue }) {
+export default function InputSlider({ isCurrency=false, title, maxValue, stepValue, value, setValue }) {
+    const { t } = useTranslation();
+
     const classes = useStyles();
-    const [value, setValue] = React.useState(defaultValue);
 
     const handleSliderChange = (event, newValue) => {
         setValue(newValue);
@@ -77,20 +80,17 @@ export default function InputSlider({ title, defaultValue, maxValue }) {
             </Grid>
             <Grid item>
             <MuiThemeProvider theme={theme}>
-                        <TextField
+                        {isCurrency ? <CurrencyTextField
                             className={classes.input}
                             value={value}
                             variant="filled"
+                            currencySymbol={t('currency')}
+                            maximumValue={maxValue}
+                            minimumValue={0}
+                            digitalGroupSpacing={2}
                             InputProps={{
                                 classes: { input: classes.nameInput, inputMarginDense: classes.inputMarginDense },
                                 disableUnderline: true,
-                            }}
-                            inputProps={{
-                                step: 1000,
-                                min: 0,
-                                max: maxValue,
-                                type: 'number',
-                                'aria-labelledby': 'input-slider',
                             }}
                             FormHelperTextProps={{ classes: { root: classes.helperText } }}
                             multiline={false}
@@ -101,7 +101,30 @@ export default function InputSlider({ title, defaultValue, maxValue }) {
                             // helperText={getNameError()}
                             onChange={handleInputChange}
                             onBlur={handleBlur}
-                        />
+                        /> : <TextField
+                            className={classes.input}
+                            value={value}
+                            variant="filled"
+                            InputProps={{
+                                classes: { input: classes.nameInput, inputMarginDense: classes.inputMarginDense },
+                                disableUnderline: true,
+                            }}
+                            inputProps={{
+                                step: stepValue,
+                                min: 0,
+                                max: maxValue,
+                                type: 'number',
+                                'aria-labelledby': 'input-slider',
+                            }}
+                            FormHelperTextProps={{ classes: { root: classes.helperText } }}
+                            multiline={false}
+                            // placeholder={`${titleSingular} Name`}
+                            margin="dense"
+                            // error={dataTemplateError!==false}
+                            // helperText={getNameError()}
+                            onChange={handleInputChange}
+                            onBlur={handleBlur}
+                        />}
                     </MuiThemeProvider>
             </Grid>
             <Grid item xs>
