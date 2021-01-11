@@ -55,10 +55,6 @@ export default function InputSlider({ isCurrency=false, title, maxValue, stepVal
         setValue(newValue);
     };
 
-    const handleInputChange = (event) => {
-        setValue(event.target.value === '' ? '' : Number(event.target.value));
-    };
-
     const handleBlur = () => {
         if (value < 0) {
         setValue(0);
@@ -92,14 +88,14 @@ export default function InputSlider({ isCurrency=false, title, maxValue, stepVal
                                 classes: { input: classes.nameInput, inputMarginDense: classes.inputMarginDense },
                                 disableUnderline: true,
                             }}
-                            FormHelperTextProps={{ classes: { root: classes.helperText } }}
+                            // FormHelperTextProps={{ classes: { root: classes.helperText } }}
                             multiline={false}
                             autoFocus
                             // placeholder={`${titleSingular} Name`}
                             margin="dense"
                             // error={dataTemplateError!==false}
                             // helperText={getNameError()}
-                            onChange={handleInputChange}
+                            onChange={(event, value) => setValue(value)}
                             onBlur={handleBlur}
                         /> : <TextField
                             className={classes.input}
@@ -122,7 +118,7 @@ export default function InputSlider({ isCurrency=false, title, maxValue, stepVal
                             margin="dense"
                             // error={dataTemplateError!==false}
                             // helperText={getNameError()}
-                            onChange={handleInputChange}
+                            onChange={(e)=>setValue(e.target.value === '' ? '' : Number(e.target.value))}
                             onBlur={handleBlur}
                         />}
                     </MuiThemeProvider>

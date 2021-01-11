@@ -7,14 +7,22 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Slide from '@material-ui/core/Slide';
 
 import { ReactComponent as ConfirmImage } from './assets/confirm.svg';
 import { ReactComponent as OTPImage } from './assets/otp.svg';
 
 import { useTranslation } from 'react-i18next';
 
+import useToggle from 'hooks/useToggle';
+
+import OTPField from 'common/otpField';
+
 export default function FormDialog({ dialogOpen, toggleDialog, amount, tenure, emi, interest }) {
     const { t } = useTranslation();
+
+    const [isOTPPage, toggleOTPPage] = useToggle();
+    const [slideInOTPImage, toggleSlideInOTPImage] = useToggle();
 
     function FormRow({type}) {
         let value;
@@ -44,24 +52,45 @@ export default function FormDialog({ dialogOpen, toggleDialog, amount, tenure, e
         <Dialog open={dialogOpen} onClose={toggleDialog} aria-labelledby="form-dialog-title">
             <DialogTitle align="center" id="form-dialog-title">{t('confirmation.title')}</DialogTitle>
             <DialogContent>
-                <ConfirmImage/>
-                <Grid container alignItems="center" justify="center" spacing={2}>
-                    <Grid container item xs={12}>
-                        <FormRow type="amount"/>
+                <Slide direction="right" in={!isOTPPage && !slideInOTPImage} mountOnEnter unmountOnExit onExited={toggleSlideInOTPImage}>
+                    <ConfirmImage/>
+                </Slide>
+                <Slide direction="left" in={slideInOTPImage && isOTPPage} mountOnEnter unmountOnExit onExited={toggleSlideInOTPImage}>
+                    <OTPImage/>
+                </Slide>
+                {!isOTPPage ? 
+                    <Grid container alignItems="center" justify="center" spacing={2}>
+                        <Grid container item xs={12}>
+                            <FormRow type="amount"/>
+                        </Grid>
+                        <Grid container item xs={12}>
+                            <FormRow type="interest"/>
+                        </Grid>
+                        <Grid container item xs={12}>
+                            <FormRow type="emi"/>
+                        </Grid>
+                    </Grid> : 
+                    <Grid container>
+                        <Typography align="center">
+                            {`${t('otp.pre')} ${t('otp.in')} ${t('otp.post')}`}
+                        </Typography>
+                        {/* <OtpInput
+                            value={otp}
+                            onChange={setOTP}
+                            numInputs={4}
+                        /> */}
+                        <OTPField/>
                     </Grid>
-                    <Grid container item xs={12}>
-                        <FormRow type="interest"/>
-                    </Grid>
-                    <Grid container item xs={12}>
-                        <FormRow type="emi"/>
-                    </Grid>
-                </Grid>
+                }
             </DialogContent>
             <DialogActions>
             <Button onClick={toggleDialog} color="primary">
                 {t('confirmation.reviewButtonText')}
             </Button>
-            <Button onClick={toggleDialog} color="primary" variant="contained">
+            <Button onClick={() => {
+                toggleOTPPage();
+                // toggleSlideInOTPImage();
+            }} color="primary" variant="contained">
                 {t('confirmation.proceedButtonText')}
             </Button>
             </DialogActions>
