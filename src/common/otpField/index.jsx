@@ -1,10 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-/**
- * @author @Kanna727 <prasanth.chitturi@pinelabs.com>
- * @since 1.0.0
- * Inspired from https://www.npmjs.com/package/react-otp-input
- */
 import { useState, useEffect } from 'react';
 
 import produce from "immer";
@@ -23,7 +18,12 @@ const RIGHT_ARROW = 39;
 const DELETE = 46;
 const SPACEBAR = 32;
 
-export default function OTPField({ isNumeric=true, isSecure=false, otpLength=4, disabled=false, onFilled=()=>{}, onChange=()=>{} }) {
+/**
+ * @author @Kanna727 <prasanth.chitturi@pinelabs.com>
+ * @since 1.0.0
+ * Inspired from https://www.npmjs.com/package/react-otp-input
+ */
+export default function OTPField({ isNumeric=true, isSecure=false, otpLength=4, disabled=false, onFilled=console.log, onChange=()=>{} }) {
     const classes = useStyles();
 
     const [otp, setOTP] = useState((new Array(otpLength)).fill(''));
@@ -40,17 +40,18 @@ export default function OTPField({ isNumeric=true, isSecure=false, otpLength=4, 
 
     // Change OTP value at focused input
     const changeCodeAtFocus = value => {
-        setOTP(produce(otp, draft => {draft[currIndex] = value}));
-        if (currIndex === otpLength-1) onFilled(otp.join(''));
-        else onChange(otp.join(''));
+        const newOTP = produce(otp, draft => { draft[currIndex] = value; });
+        setOTP(newOTP);
+        if (currIndex === otpLength-1 && value) onFilled(newOTP.join(''));
+        else onChange(newOTP.join(''));
     };
 
     // Handle cases of backspace, delete, left arrow, right arrow, space
     const handleOnKeyDown = (e) => {
         if (e.keyCode === BACKSPACE || e.key === 'Backspace') {
             e.preventDefault();
-            changeCodeAtFocus('');
             if(currIndex > 0) decIndex();
+            changeCodeAtFocus('');
         } else if (e.keyCode === DELETE || e.key === 'Delete') {
             e.preventDefault();
             changeCodeAtFocus('');
@@ -120,19 +121,20 @@ export default function OTPField({ isNumeric=true, isSecure=false, otpLength=4, 
         .slice(0, otpLength - currIndex)
         .split('');
 
-        // Paste data from focused input onwards
-        setOTP(produce(otp, draft => {
+        const newOTP = produce(otp, draft => {
             for (let pos = 0; pos < otpLength; ++pos) {
                 if (pos >= currIndex && pastedData.length > 0) {
                     draft[pos] = pastedData.shift();
                     nextActiveInput++;
                 }
             }
-        }));
+        });
+        // Paste data from focused input onwards
+        setOTP(newOTP);
 
         overwriteIndex(nextActiveInput-1);
-        if (nextActiveInput === otpLength) onFilled(otp.join(''));
-        else onChange(otp.join(''));
+        if (nextActiveInput === otpLength) onFilled(newOTP.join(''));
+        else onChange(newOTP.join(''));
     };
 
     const getType = () => {
@@ -161,6 +163,7 @@ export default function OTPField({ isNumeric=true, isSecure=false, otpLength=4, 
                         inputProps={{type: getType()}}
                         value={otp[i]}
                         disabled={disabled}
+                        autoComplete="off"
                         onChange={handleOnChange}
                         onKeyDown={handleOnKeyDown}
                         onPaste={handleOnPaste}

@@ -1,13 +1,18 @@
 {
     "common": {
         "welcome": "Welcome Aboard!",
-        "congratulation": "Congratulations!!"
+        "congratulation": "Congratulations!!",
+        "failed": "Failed!!"
     },
     "errors": {
         "404": "Page not found"
     },
     "home": {
         "citation": "You may choose to apply for and avail a pre approved personal loan of up to",
+        "approvedPre": "Jumbo Loan of",
+        "approvedIn": "{{amount}} for {{tenure}} Months",
+        "approvedPost": "has been approved and disbursed to your HDFC Bank Savings Account. Please login to HDFC Bank net banking for more details",
+        "failed": "You request for Jumbo Loan has failed. Please contact branch for further details",
         "buttonText": "Customise"
     },
     "customise": {
@@ -30,7 +35,8 @@
     "otp": {
         "pre": "Please enter the OTP sent to your registered mobile number",
         "in": "to confirm the",
-        "post": "application"
+        "post": "application",
+        "resend": "Resend OTP"
     },
     "currency": "₹"
 }

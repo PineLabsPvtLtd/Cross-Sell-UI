@@ -82,7 +82,7 @@ export default function InputSlider({ isCurrency=false, title, maxValue, stepVal
                             variant="filled"
                             currencySymbol={t('currency')}
                             maximumValue={maxValue}
-                            minimumValue={0}
+                            minimumValue={'0'}
                             digitalGroupSpacing={2}
                             InputProps={{
                                 classes: { input: classes.nameInput, inputMarginDense: classes.inputMarginDense },
@@ -90,7 +90,6 @@ export default function InputSlider({ isCurrency=false, title, maxValue, stepVal
                             }}
                             // FormHelperTextProps={{ classes: { root: classes.helperText } }}
                             multiline={false}
-                            autoFocus
                             // placeholder={`${titleSingular} Name`}
                             margin="dense"
                             // error={dataTemplateError!==false}
@@ -126,7 +125,7 @@ export default function InputSlider({ isCurrency=false, title, maxValue, stepVal
             <Grid item xs>
                 <Slider
                     value={typeof value === 'number' ? value : 0}
-                    max={maxValue}
+                    max={+maxValue}
                     onChange={handleSliderChange}
                     aria-labelledby="input-slider"
                 />

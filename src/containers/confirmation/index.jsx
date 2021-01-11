@@ -1,10 +1,8 @@
-import { Fragment } from 'react';
+import { Fragment, useContext } from 'react';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Slide from '@material-ui/core/Slide';
@@ -15,23 +13,31 @@ import { ReactComponent as OTPImage } from './assets/otp.svg';
 import { useTranslation } from 'react-i18next';
 
 import useToggle from 'hooks/useToggle';
+import useCountdownTimer from 'hooks/useTimer';
+
+import GlobalContext from 'contexts/globalContext';
 
 import OTPField from 'common/otpField';
 
-export default function FormDialog({ dialogOpen, toggleDialog, amount, tenure, emi, interest }) {
+export default function ConfirmDialogContents({ toggleConfirm }) {
     const { t } = useTranslation();
+
+    const { toggleDialog, setApproved, formattedAmount, tenure, emi, interest } = useContext(GlobalContext);
 
     const [isOTPPage, toggleOTPPage] = useToggle();
     const [slideInOTPImage, toggleSlideInOTPImage] = useToggle();
+    const [resendOTPenabled, toggleResendOTP] = useToggle();
+
+    const [timeLeft, startTimer] = useCountdownTimer({onStart: toggleResendOTP, onEnd: toggleResendOTP, autoIncrementInterval: 5})
 
     function FormRow({type}) {
         let value;
         switch(type){
-            case 'amount': value = amount; break;
+            case 'amount': value = formattedAmount; break;
             case 'tenure': value = tenure; break;
             case 'emi': value = emi; break;
             case 'interest': value = interest; break;
-            default: value = amount; break;
+            default: value = formattedAmount; break;
         }
         return (
           <Fragment>
@@ -48,10 +54,16 @@ export default function FormDialog({ dialogOpen, toggleDialog, amount, tenure, e
         );
       }
 
-    return (
-        <Dialog open={dialogOpen} onClose={toggleDialog} aria-labelledby="form-dialog-title">
-            <DialogTitle align="center" id="form-dialog-title">{t('confirmation.title')}</DialogTitle>
-            <DialogContent>
+    const onOTPFilled = (val) => {
+        if (val==='1234') {
+            setApproved(true);
+        } else {
+            setApproved(false);
+        }
+        toggleDialog();
+    }
+
+    return <Fragment><DialogContent>
                 <Slide direction="right" in={!isOTPPage && !slideInOTPImage} mountOnEnter unmountOnExit onExited={toggleSlideInOTPImage}>
                     <ConfirmImage/>
                 </Slide>
@@ -74,26 +86,18 @@ export default function FormDialog({ dialogOpen, toggleDialog, amount, tenure, e
                         <Typography align="center">
                             {`${t('otp.pre')} ${t('otp.in')} ${t('otp.post')}`}
                         </Typography>
-                        {/* <OtpInput
-                            value={otp}
-                            onChange={setOTP}
-                            numInputs={4}
-                        /> */}
-                        <OTPField/>
+                        <OTPField onFilled={onOTPFilled}/>
                     </Grid>
                 }
             </DialogContent>
-            <DialogActions>
-            <Button onClick={toggleDialog} color="primary">
-                {t('confirmation.reviewButtonText')}
-            </Button>
-            <Button onClick={() => {
-                toggleOTPPage();
-                // toggleSlideInOTPImage();
-            }} color="primary" variant="contained">
-                {t('confirmation.proceedButtonText')}
-            </Button>
-            </DialogActions>
-        </Dialog>
-    );
+            {!isOTPPage ? <DialogActions>
+                <Button onClick={toggleConfirm} color="primary">
+                    {t('confirmation.reviewButtonText')}
+                </Button>
+                <Button onClick={toggleOTPPage} color="primary" variant="contained">
+                    {t('confirmation.proceedButtonText')}
+                </Button>
+            </DialogActions> : <DialogActions><Button color="primary" disabled={!resendOTPenabled} onClick={startTimer}>
+                    {`${t('otp.resend')}(${timeLeft})`}
+                </Button></DialogActions>}</Fragment>
 }
