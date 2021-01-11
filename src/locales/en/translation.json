@@ -27,5 +27,10 @@
         "proceedButtonText": "LET'S PROCEED",
         "reviewButtonText": "LET'S REVIEW"
     },
+    "otp": {
+        "pre": "Please enter the OTP sent to your registered mobile number",
+        "in": "to confirm the",
+        "post": "application"
+    },
     "currency": "₹"
 }

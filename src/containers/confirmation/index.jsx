@@ -8,6 +8,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
+import { ReactComponent as ConfirmImage } from './assets/confirm.svg';
+import { ReactComponent as OTPImage } from './assets/otp.svg';
+
 import { useTranslation } from 'react-i18next';
 
 export default function FormDialog({ dialogOpen, toggleDialog, amount, tenure, emi, interest }) {
@@ -41,7 +44,8 @@ export default function FormDialog({ dialogOpen, toggleDialog, amount, tenure, e
         <Dialog open={dialogOpen} onClose={toggleDialog} aria-labelledby="form-dialog-title">
             <DialogTitle align="center" id="form-dialog-title">{t('confirmation.title')}</DialogTitle>
             <DialogContent>
-                <Grid container alignItems="center" justify="center" spacing={1}>
+                <ConfirmImage/>
+                <Grid container alignItems="center" justify="center" spacing={2}>
                     <Grid container item xs={12}>
                         <FormRow type="amount"/>
                     </Grid>

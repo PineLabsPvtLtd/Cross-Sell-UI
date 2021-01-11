@@ -48,7 +48,10 @@ export default function FormDialog({ dialogOpen, toggleDialog }) {
             <ConfirmationDialog 
                 dialogOpen={confirmDialogOpen} 
                 toggleDialog={toggleConfirmDialog} 
-                amount={amount} 
+                amount={new Intl.NumberFormat('en-IN', {
+                    style: 'currency',
+                    currency: 'INR'
+                }).format(amount)} 
                 tenure={tenure}
                 emi={emi}    
                 interest={'14%'}
