@@ -163,7 +163,7 @@ export default function OTPField({ isNumeric=true, isSecure=false, otpLength=4, 
                         inputProps={{type: getType()}}
                         value={otp[i]}
                         disabled={disabled}
-                        autoComplete="off"
+                        autoComplete="new-password"
                         onChange={handleOnChange}
                         onKeyDown={handleOnKeyDown}
                         onPaste={handleOnPaste}
