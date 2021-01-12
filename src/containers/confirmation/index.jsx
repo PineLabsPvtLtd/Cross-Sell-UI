@@ -70,8 +70,7 @@ export default function ConfirmDialogContents({ toggleConfirm }) {
                 <Slide direction="left" in={slideInOTPImage && isOTPPage} mountOnEnter unmountOnExit onExited={toggleSlideInOTPImage}>
                     <OTPImage/>
                 </Slide>
-                {!isOTPPage ? 
-                    <Grid container alignItems="center" justify="center" spacing={2}>
+                <Grid container alignItems="center" justify="center" spacing={2}>
                         <Grid container item xs={12}>
                             <FormRow type="amount"/>
                         </Grid>
@@ -81,7 +80,8 @@ export default function ConfirmDialogContents({ toggleConfirm }) {
                         <Grid container item xs={12}>
                             <FormRow type="emi"/>
                         </Grid>
-                    </Grid> : 
+                    </Grid>
+                {isOTPPage &&
                     <Grid container>
                         <Typography align="center">
                             {`${t('otp.pre')} ${t('otp.in')} ${t('otp.post')}`}
