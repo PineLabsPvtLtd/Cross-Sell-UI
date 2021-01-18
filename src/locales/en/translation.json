@@ -2,18 +2,35 @@
     "common": {
         "welcome": "Welcome Aboard!",
         "congratulation": "Congratulations!!",
-        "failed": "Failed!!"
+        "failed": "Failed!!",
+        "submit": "Submit"
     },
     "errors": {
         "404": "Page not found"
     },
-    "home": {
-        "citation": "You may choose to apply for and avail a pre approved personal loan of up to",
+    "jumbo": {
+        "citation": "You may choose to apply for and avail a pre approved Jumbo loan of up to",
         "approvedPre": "Jumbo Loan of",
         "approvedIn": "{{amount}} for {{tenure}} Months",
-        "approvedPost": "has been approved and disbursed to your HDFC Bank Savings Account. Please login to HDFC Bank net banking for more details",
+        "approvedPost": "has been approved and disbursed to your {{entity}} Bank Savings Account. Please login to {{entity}} Bank net banking for more details",
         "failed": "You request for Jumbo Loan has failed. Please contact branch for further details",
         "buttonText": "Customise"
+    },
+    "insta": {
+        "citation": "You may choose to apply for and avail a pre approved Insta loan of up to",
+        "approvedPre": "Insta Loan of",
+        "approvedIn": "{{amount}} for {{tenure}} Months",
+        "approvedPost": "has been approved and disbursed to your {{entity}} Bank Savings Account. Please login to {{entity}} Bank net banking for more details",
+        "failed": "You request for Insta Loan has failed. Please contact branch for further details",
+        "buttonText": "Customise"
+    },
+    "enhancement": {
+        "citation": "Your card is Pre-Approved for Credit Limit increase to amount {{amount}}",
+        "approvedPre": "Your credit limit on your Credit Card has been increased to",
+        "approvedIn": "{{amount}}",
+        "approvedPost": "",
+        "failed": "You request for credit limit enhancement has failed. Please contact branch for further details",
+        "buttonText": "Confirm"
     },
     "customise": {
         "title": "Customise your loan amount & EMI",
@@ -23,20 +40,25 @@
         "buttonText": "Submit"
     },
     "confirmation": {
-        "title": "Great! Let's confirm what you selected",
-        "amount": "Loan Value",
-        "tenure": "Tenure",
-        "emi": "EMI",
-        "interest": "Interest",
+        "title": { "loan": "Great! Let's confirm what you selected", "card": "Confirmation"},
         "proceed": "Proceed to apply for loan",
         "proceedButtonText": "LET'S PROCEED",
-        "reviewButtonText": "LET'S REVIEW"
+        "reviewButtonText": "LET'S REVIEW",
+        "headers": {
+            "loan": ["Loan Value", "Tenure", "Interest", "EMI"],
+            "card": ["Card No.", "Mobile No.", "Eligible Limit"]
+        }
     },
     "otp": {
-        "pre": "Please enter the OTP sent to your registered mobile number",
-        "in": "to confirm the",
-        "post": "application",
+        "title": "Enter OTP",
+        "citation": "Please enter the OTP sent to your registered mobile number {{mobile}} to confirm the {{type}} application",
         "resend": "Resend OTP"
     },
-    "currency": "₹"
+    "currency": "₹",
+    "feedback": {
+        "reason": { "loan": "Reason for Loan", "card": "Reason for limit enhancement"},
+        "referral": "Employee Referral Code",
+        "feedback": "Feedback",
+        "thanks": "Thank you for your valuable feedback"
+    }
 }

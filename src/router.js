@@ -32,7 +32,7 @@ export default function App() {
             }>
                 <Router>
                     <Switch>
-                        <Route exact path="/">
+                        <Route exact path="/:refID">
                             <Home/>
                         </Route>
                         <Route path="*">
