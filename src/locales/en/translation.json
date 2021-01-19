@@ -31,7 +31,7 @@
         "citation": "Your card is Pre-Approved for Credit Limit increase to amount {{amount}}",
         "approvedPre": "Your credit limit on your Credit Card has been increased to",
         "approvedIn": "{{amount}}",
-        "approvedPost": "",
+        "approvedPost": "Thank you for your continued patronage.",
         "failed": "You request for credit limit enhancement has failed. Please contact branch for further details",
         "buttonText": "Let's proceed"
     },
