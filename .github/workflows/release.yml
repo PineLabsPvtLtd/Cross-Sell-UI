@@ -12,9 +12,9 @@ jobs:
 
     steps:
       # ...
-      - name: "Compress build"
-        run: |
-          zip -r  ./build.zip ./build
+      - uses: montudor/action-zip@v0.1.1
+        with:
+          args: zip -qq -r build.zip build
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
