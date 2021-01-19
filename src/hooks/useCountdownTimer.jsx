@@ -13,13 +13,11 @@ export default function useCountdownTimer({onStart=()=>{}, onEnd=()=>{}, interva
     const [counter, setCounter] = useState(-1);
 
     useEffect(() => {
-        console.log(counter);
         counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
         counter === 0 && onEnd();
       }, [counter]);
 
     const startCountdown = () => {
-        console.log(counter, autoIncrementInterval)
         onStart();
         setCounter(prevCounter + autoIncrementInterval);
         setPrevCounter(prevCounter + autoIncrementInterval);

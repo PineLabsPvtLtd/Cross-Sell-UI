@@ -9,6 +9,7 @@
         "404": "Page not found"
     },
     "jumbo": {
+        "title": "Jumbo Loan",
         "citation": "You may choose to apply for and avail a pre approved Jumbo loan of up to",
         "approvedPre": "Jumbo Loan of",
         "approvedIn": "{{amount}} for {{tenure}} Months",
@@ -17,6 +18,7 @@
         "buttonText": "Customise"
     },
     "insta": {
+        "title": "Insta Loan",
         "citation": "You may choose to apply for and avail a pre approved Insta loan of up to",
         "approvedPre": "Insta Loan of",
         "approvedIn": "{{amount}} for {{tenure}} Months",
@@ -25,12 +27,13 @@
         "buttonText": "Customise"
     },
     "enhancement": {
+        "title": "Limit Enhancement",
         "citation": "Your card is Pre-Approved for Credit Limit increase to amount {{amount}}",
         "approvedPre": "Your credit limit on your Credit Card has been increased to",
         "approvedIn": "{{amount}}",
         "approvedPost": "",
         "failed": "You request for credit limit enhancement has failed. Please contact branch for further details",
-        "buttonText": "Confirm"
+        "buttonText": "Let's proceed"
     },
     "customise": {
         "title": "Customise your loan amount & EMI",
@@ -42,7 +45,7 @@
     "confirmation": {
         "title": { "loan": "Great! Let's confirm what you selected", "card": "Confirmation"},
         "proceed": "Proceed to apply for loan",
-        "proceedButtonText": "LET'S PROCEED",
+        "proceedButtonText": { "loan": "Let's proceed", "card": "Increase my limit"},
         "reviewButtonText": "LET'S REVIEW",
         "headers": {
             "loan": ["Loan Value", "Tenure", "Interest", "EMI"],

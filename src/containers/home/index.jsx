@@ -50,6 +50,19 @@ export default function Home() {
     const { t } = useTranslation();
     const { refID } = useParams();
 
+    const onBackButtonEvent = (e) => {
+        e.preventDefault();
+        if(step===2 && isLoan) decStep();
+    }
+
+    useEffect(() => {
+        window.history.pushState(null, null, window.location.pathname);
+        window.addEventListener('popstate', onBackButtonEvent);
+        return () => {
+            window.removeEventListener('popstate', onBackButtonEvent);  
+        };
+    }, [step]);
+
     const [fetchDetails, detailsLoading, {productCode, MinAmount, MaxAmount, IntervalAmount, TenureList, cardNo, mobile} = {productCode: 1, EntityID: 'HDFC', MinAmount: 0, MaxAmount: 1000000, IntervalAmount: 100000, TenureList: [], cardNo: 1234, mobile: 9999999999}] = useFetch(true);
     const [fetchOTP, otpLoading, {otp} = {otp: '1234'}, otpStatus] = useFetch(true);
     const product = PRODUCTS[productCode]?.name;
@@ -81,11 +94,10 @@ export default function Home() {
     }, []);
 
     useEffect(()=> {
-        console.log(otpStatus, otp);
         if(otpStatus===200 && otp) startTimer();
     }, [otpLoading])
 
-    useEffect(()=>{console.log(isOTPPage); if(isOTPPage) fetchOTP(config.backendOTPEndpoint + refID)}, [isOTPPage]);
+    useEffect(()=>{if(isOTPPage) fetchOTP(config.backendOTPEndpoint + refID)}, [isOTPPage]);
 
     const submitFeedback = async() => {
         toggleLoading();
@@ -123,7 +135,7 @@ export default function Home() {
     const images = [<CongratsImage/>, null, <ConfirmImage className={classes.image}/>, <OTPImage className={classes.image}/>, isApproved === false ? <FailedImage/> : <CongratsImage/>];
     const titles = [t('common.congratulation'), t('customise.title'), t(`confirmation.title.${isLoan ? 'loan' : 'card'}`), t('otp.title'), isApproved === false ? t('common.failed') : t('common.congratulation')];
     const citations = [t(`${product}.citation`), null, null, null, isApproved === false ? t(`${product}.failed`) : <Fragment>{t(`${product}.approvedPre`)} <b>{t(`${product}.approvedIn`, { amount: formattedAmount, tenure: tenure})}</b> {t(`${product}.approvedPost`)}</Fragment>];
-    const buttons = [t(`${product}.buttonText`), t('customise.buttonText'), t('confirmation.proceedButtonText'), t('otp.resend') + (timeLeft > 0 ? `(${timeLeft})` : ''), t('common.submit')]
+    const buttons = [t(`${product}.buttonText`), t('customise.buttonText'), t(`confirmation.proceedButtonText.${isLoan ? 'loan' : 'card'}`), t('otp.resend') + (timeLeft > 0 ? `(${timeLeft})` : ''), t('common.submit')]
     const buttonActions = [product === 'enhancement' ? overwriteStep.bind(null, CONFIRMATION_PAGE) : incStep, incStep, incStep, fetchOTP.bind(null, config.backendOTPEndpoint + refID), submitFeedback]
 
     const getBodies = () => {
@@ -152,7 +164,7 @@ export default function Home() {
     return (
         <Container component="main" maxWidth="xs">
             <div className={classes.paper}>
-                {step === 2 && <IconButton color="primary" className={classes.backButton} classes={{root: classes.backButtonRoot}} onClick={decStep}><ArrowBackIcon/></IconButton>}
+                {(step === 2 && isLoan) && <IconButton color="primary" className={classes.backButton} classes={{root: classes.backButtonRoot}} onClick={decStep}><ArrowBackIcon/></IconButton>}
                 {images[step]}
                 <Grid container
                     direction="column"
@@ -165,9 +177,9 @@ export default function Home() {
                     </Typography></Grid>
                     {detailsLoading ? (<Skeleton animation="wave" />) : (citations[step] && <Grid item><Typography align="center">{citations[step]}</Typography></Grid>)}
                     {detailsLoading ? (<Skeleton animation="wave" />) : <GlobalContextProvider value={{ 
-                        amount, setAmount, formattedAmount, toggleTNCAccepted, tncAccepted,
+                        product, amount, setAmount, formattedAmount, toggleTNCAccepted, tncAccepted,
                         MinAmount: MinAmount, MaxAmount: MaxAmount, IntervalAmount: IntervalAmount, tenure, setTenure, emi, interest,
-                        setApproved, isOTPPage: isOTPPage,
+                        setApproved, isOTPPage: isOTPPage, mobile,
                         tenureList, isLoan, values, otp, tncLink: PRODUCTS[productCode]?.tncLink,
                         feedbackSubmitted, refID, ROI: selectedTenureDetails?.ROI,
                         toggleLoading, setError, reason, setReason,

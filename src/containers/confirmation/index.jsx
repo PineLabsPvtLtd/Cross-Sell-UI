@@ -17,7 +17,7 @@ import TNC from 'common/tnc';
 export default function ConfirmDialogContents() {
     const { t } = useTranslation();
 
-    const { setApproved, amount, tenure, ROI, emi, values, isOTPPage, isLoan, otp, tncLink, toggleTNCAccepted, tncAccepted, refID, toggleLoading, setError } = useContext(GlobalContext);
+    const { setApproved, product, amount, tenure, ROI, emi, values, isOTPPage, mobile, isLoan, otp, tncLink, toggleTNCAccepted, tncAccepted, refID, toggleLoading, setError } = useContext(GlobalContext);
 
     function FormRow({header, value}) {
         return (
@@ -36,7 +36,6 @@ export default function ConfirmDialogContents() {
       }
 
     const onOTPFilled = async (val) => {
-        console.log(val);
         if (val===otp) {
           toggleLoading();
           try {
@@ -72,7 +71,7 @@ export default function ConfirmDialogContents() {
                 </Slide> */}
                 <Grid container alignItems="center" justify="center" spacing={2}>
                     {t(`confirmation.headers.${isLoan ? 'loan' : 'card'}`, { returnObjects: true }).map((h, i) => 
-                        <Grid container item xs={12}>
+                        <Grid container item xs={12} key={i}>
                             <FormRow header={h} value={values[i]}/>
                         </Grid>)
                     }
@@ -80,7 +79,7 @@ export default function ConfirmDialogContents() {
                     <Grow in={isOTPPage} mountOnEnter unmountOnExit timeout={1000} style={{ transformOrigin: 'center' }}>
                         <Grid container item xs={12}>
                                 <Typography align="center">
-                                    {t('otp.citation', { mobile: '9999999999', type: 'Jumbo Loan' })}
+                                    {t('otp.citation', { mobile: mobile, type: t(`${product}.title`) })}
                                 </Typography>
                                 <OTPField onFilled={onOTPFilled}/>
                         </Grid>
