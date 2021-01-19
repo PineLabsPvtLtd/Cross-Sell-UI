@@ -12,11 +12,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: papeloto/action-zip@v1
-        with:
-          files: build/
-          dest: build.zip
-          recursive: false
+      - name: "Compress build"
+        run: |
+          zip -r build.zip build/
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
