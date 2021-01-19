@@ -16,6 +16,7 @@ jobs:
         with:
           files: build/
           dest: build.zip
+          recursive: false
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
