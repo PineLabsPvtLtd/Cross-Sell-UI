@@ -36,7 +36,7 @@ export default function App() {
                             <Home/>
                         </Route>
                         <Route path="*">
-                            <PageNotFound/>
+                            <PageNotFound showButton={false}/>
                         </Route>
                     </Switch>
                 </Router>

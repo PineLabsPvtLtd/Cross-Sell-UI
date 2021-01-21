@@ -2,6 +2,7 @@
 import { useState, Fragment, useEffect } from 'react';
 
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -20,6 +21,7 @@ import { ReactComponent as OTPImage } from './assets/otp.svg';
 import Customise from 'containers/customise';
 import Confirmation from 'containers/confirmation';
 import Feedback from 'containers/feedback';
+import ErrorPage from 'common/error';
 
 import useStyles from './styles';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +50,7 @@ const PRODUCTS = {
 };
 
 export default function Home() {
+    const { enqueueSnackbar } = useSnackbar();
     const [step, incStep, decStep, overwriteStep] = useCounter();
     const isOTPPage = step === 3;
     const classes = useStyles({ activeStep: step });
@@ -67,8 +70,13 @@ export default function Home() {
         };
     }, [step]);
 
-    const [fetchDetails, detailsLoading, {ProductCode, MinAmount, MaxAmount, IntervalAmount, tenureAmountList, cardNo, mobile} = {ProductCode: 1, EntityID: 'HDFC', MinAmount: 0, MaxAmount: 1000000, IntervalAmount: 100000, tenureAmountList: [], cardNo: 1234, mobile: 9999999999}] = useFetch(true);
-    const [fetchOTP, otpLoading, otp, otpStatus] = useFetch(true);
+    const [
+        fetchDetails, detailsLoading, 
+        {ProductCode, MinimumEligibleLoanAmount: MinAmount, MaximumEligibleLoanAmount: MaxAmount, IntervalAmountAllowedToChange: IntervalAmount, tenureAmountList, cardNo, mobile} 
+        = {ProductCode: 1, EntityID: 'HDFC', MinimumEligibleLoanAmount: 0, MaximumEligibleLoanAmount: 1000000, IntervalAmountAllowedToChange: 100000, tenureAmountList: [], cardNo: 1234, mobile: 9999999999},
+        detailsStatus, detailsError,
+    ] = useFetch(true);
+    const [fetchOTP, otpLoading, otp, otpStatus, otpError] = useFetch(true);
     const product = PRODUCTS[ProductCode]?.name;
     const isLoan = ['jumbo', 'insta'].includes(product);
 
@@ -83,15 +91,24 @@ export default function Home() {
 
     const [isApproved, setApproved] = useState(null);
 
-    const [amount, setAmount] = useState(600000);
+    const [amount, setAmount] = useState(60000000);
     const [tenure, setTenure] = useState(null);
     const [reason, setReason] = useState(null);
     const [referral, setReferral] = useState(null);
     const [rating, setRating] = useState(2.5);
 
+    useEffect(()=>{
+        if(error) {
+            enqueueSnackbar(error, { 
+                variant: 'error',
+                preventDuplicate: true,
+            });
+        }
+    }, [error]);
+
     useEffect(()=>{if(isApproved!==null) incStep()}, [isApproved]);
 
-    useEffect(()=>{if(tenureAmountList) setTenure(tenureAmountList[0].Months)}, [tenureAmountList]);
+    useEffect(()=>{console.log(MinAmount, MaxAmount, IntervalAmount); if(tenureAmountList) setTenure(tenureAmountList[0].Months)}, [tenureAmountList]);
 
     useEffect(()=>{
         fetchDetails(config.backendDetailsEndpoint + refID);
@@ -99,6 +116,7 @@ export default function Home() {
 
     useEffect(()=> {
         if(otpStatus===200 && otp) startTimer();
+        else setError(otpError);
     }, [otpLoading])
 
     useEffect(()=>{if(isOTPPage) fetchOTP(config.backendOTPEndpoint + refID)}, [isOTPPage]);
@@ -123,17 +141,20 @@ export default function Home() {
           toggleLoading();
     }
 
-    const formattedAmount = new Intl.NumberFormat('en-IN', {
+    const formattedAmount = isLoan ? new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR'
-    }).format(amount);
+    }).format(amount/100) : new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+    }).format(MaxAmount/100);
 
     const selectedTenureDetails = tenureAmountList?.find((t) => t.Months === tenure);
-    const interest = `${selectedTenureDetails?.ROI || 1}%`;
+    const interest = `${+selectedTenureDetails?.ROI/100 || 1}%`;
     const emi = new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR'
-        }).format(emiCalculator(amount, (selectedTenureDetails?.ROI)/1200 || 1, tenure))
+        }).format(emiCalculator(amount/100, (+selectedTenureDetails?.ROI)/120000 || 1, tenure))
 
     const images = [<CongratsImage/>, null, <ConfirmImage className={classes.image}/>, <OTPImage className={classes.image}/>, isApproved === false ? <FailedImage/> : <CongratsImage/>];
     const titles = [t('common.congratulation'), t('customise.title'), t(`confirmation.title.${isLoan ? 'loan' : 'card'}`), t('otp.title'), isApproved === false ? t('common.failed') : t('common.congratulation')];
@@ -148,7 +169,7 @@ export default function Home() {
                                             {new Intl.NumberFormat('en-IN', {
                                                 style: 'currency',
                                                 currency: 'INR'
-                                            }).format(MaxAmount)}
+                                            }).format(MaxAmount/100)}
                                         </Typography>}
                                     </Grid>;
             case CUSTOMISE_PAGE: return <Customise/>;
@@ -162,10 +183,10 @@ export default function Home() {
     const values = isLoan ? [formattedAmount, tenure, interest, emi] : [`XXXX XXXX XXXX ${cardNo}`, mobile, new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR'
-    }).format(MaxAmount)];
+    }).format(MaxAmount/100)];
 
     return (
-        <Container component="main" maxWidth="xs">
+        detailsStatus === 200 ? <Container component="main" maxWidth="xs">
             <div className={classes.paper}>
                 {(step === 2 && isLoan) && <IconButton color="primary" className={classes.backButton} classes={{root: classes.backButtonRoot}} onClick={decStep}><ArrowBackIcon/></IconButton>}
                 {images[step]}
@@ -181,8 +202,8 @@ export default function Home() {
                     {detailsLoading ? (<Skeleton animation="wave" />) : (citations[step] && <Grid item><Typography align="center">{citations[step]}</Typography></Grid>)}
                     {detailsLoading ? (<Skeleton animation="wave" />) : <GlobalContextProvider value={{ 
                         product, amount, setAmount, formattedAmount, toggleTNCAccepted, tncAccepted,
-                        MinAmount: MinAmount, MaxAmount: MaxAmount, IntervalAmount: IntervalAmount, tenure, setTenure, emi, interest,
-                        setApproved, isOTPPage: isOTPPage, mobile,
+                        MinAmount, MaxAmount, IntervalAmount, tenure, setTenure, emi, interest,
+                        setApproved, isOTPPage, mobile,
                         tenureList, isLoan, values, tncLink: PRODUCTS[ProductCode]?.tncLink,
                         feedbackSubmitted, refID, ROI: selectedTenureDetails?.ROI,
                         toggleLoading, setError, reason, setReason,
@@ -207,6 +228,6 @@ export default function Home() {
                     </Grid>}
                 </Grid>
             </div>
-        </Container>
+        </Container> : <ErrorPage message={detailsError} showButton redirectLink={`/${refID}`} buttonText="Refresh"/>
     );
 }

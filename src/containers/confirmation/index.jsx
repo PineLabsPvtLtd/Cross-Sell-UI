@@ -17,7 +17,7 @@ import TNC from 'common/tnc';
 export default function ConfirmDialogContents() {
     const { t } = useTranslation();
 
-    const { setApproved, product, amount, tenure, ROI, emi, values, isOTPPage, mobile, isLoan, tncLink, toggleTNCAccepted, tncAccepted, refID, toggleLoading, setError } = useContext(GlobalContext);
+    const { setApproved, product, amount, MaxAmount, tenure, ROI, emi, values, isOTPPage, mobile, isLoan, tncLink, toggleTNCAccepted, tncAccepted, refID, toggleLoading, setError } = useContext(GlobalContext);
 
     function FormRow({header, value}) {
         return (
@@ -38,14 +38,19 @@ export default function ConfirmDialogContents() {
     const onOTPFilled = async (val) => {
       toggleLoading();
       try {
-        await backendServer.post(backendSubmitEndpoint, {
+        const body = isLoan ? {
             [backendPrimaryKey]: refID,
-            'AmountInPaisa': amount * 100,
+            'AmountInPaisa': amount,
             'Months': tenure,
             'ROI': ROI,
             'MonthlyEMIAmountInPaisa': emi,
             'OTP': val,
-        });
+          } : {
+            [backendPrimaryKey]: refID,
+            'AmountInPaisa': MaxAmount,
+            'OTP': val,
+          }
+        await backendServer.post(backendSubmitEndpoint, body);
         setApproved(true);
       } catch (err) {
         if (err.status) {

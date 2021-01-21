@@ -22,7 +22,7 @@ export default function useFetch(initLoadingState = false, baseURL = backendURL,
             setResponse(res.body?.response || res.body);
         } catch (err) {
             setResponse(err.response?.body);
-            setError(err.response?.body?.status?.message || 'Failed');
+            setError(err.response?.body?.ResponseMessage || 'Failed');
             setStatus(err.status);
         }
         toggleLoading();

@@ -77,17 +77,9 @@ export default function FormDialog() {
         const val = (+MinAmount) + (index*(+IntervalAmount));
         return {
             value: val,
-            label: numFormatter(val)
+            label: numFormatter(val/100)
         }
     })
-
-    const handleBlur = () => {
-        if (amount < 0) {
-            setAmount(0);
-        } else if (amount > MaxAmount) {
-            setAmount(MaxAmount);
-        }
-    };
 
     return (
         <Fragment>
@@ -105,28 +97,23 @@ export default function FormDialog() {
                     <MuiThemeProvider theme={theme}>
                     <CurrencyTextField
                             className={classes.input}
-                            value={amount}
+                            value={`${amount/100}`}
                             variant="filled"
                             currencySymbol={t('currency')}
-                            maximumValue={MaxAmount}
-                            minimumValue={'0'}
                             digitalGroupSpacing={2}
                             InputProps={{
                                 classes: { input: classes.nameInput, inputMarginDense: classes.inputMarginDense },
                                 disableUnderline: true,
                             }}
-                            multiline={false}
                             margin="dense"
                             disabled
-                            onChange={(event, value) => setAmount(value)}
-                            onBlur={handleBlur}
                         />
                     </MuiThemeProvider>
                 </Grid>
                 <Grid item xs>
                     <Slider
                         name='amount'
-                        value={typeof amount === 'number' ? amount : 0}
+                        value={amount}
                         min={+MinAmount}
                         max={amountMarks[amountMarks.length - 1].value}
                         marks={amountMarks}
