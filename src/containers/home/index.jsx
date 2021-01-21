@@ -41,7 +41,11 @@ const CONFIRMATION_PAGE = 2;
 const OTP_PAGE = 3;
 const ACKNOWLEDGMENT_PAGE = 4;
 
-const PRODUCTS = { 1: {name: 'jumbo', tncLink: config.jumboTNCLink}, 2: {name: 'insta', tncLink: config.instaTNCLink}, 3: {name: 'enhancement', tncLink: config.jumboTNCLink}};
+const PRODUCTS = { 
+    [config.jumboProdCode]: {name: 'jumbo', tncLink: config.jumboTNCLink},
+    [config.instaProdCode]: {name: 'insta', tncLink: config.instaTNCLink},
+    [config.enhancementProdCode]: {name: 'enhancement', tncLink: config.jumboTNCLink}
+};
 
 export default function Home() {
     const [step, incStep, decStep, overwriteStep] = useCounter();
@@ -63,9 +67,9 @@ export default function Home() {
         };
     }, [step]);
 
-    const [fetchDetails, detailsLoading, {productCode, MinAmount, MaxAmount, IntervalAmount, TenureList, cardNo, mobile} = {productCode: 1, EntityID: 'HDFC', MinAmount: 0, MaxAmount: 1000000, IntervalAmount: 100000, TenureList: [], cardNo: 1234, mobile: 9999999999}] = useFetch(true);
-    const [fetchOTP, otpLoading, {otp} = {otp: '1234'}, otpStatus] = useFetch(true);
-    const product = PRODUCTS[productCode]?.name;
+    const [fetchDetails, detailsLoading, {ProductCode, MinAmount, MaxAmount, IntervalAmount, tenureAmountList, cardNo, mobile} = {ProductCode: 1, EntityID: 'HDFC', MinAmount: 0, MaxAmount: 1000000, IntervalAmount: 100000, tenureAmountList: [], cardNo: 1234, mobile: 9999999999}] = useFetch(true);
+    const [fetchOTP, otpLoading, otp, otpStatus] = useFetch(true);
+    const product = PRODUCTS[ProductCode]?.name;
     const isLoan = ['jumbo', 'insta'].includes(product);
 
     const [feedbackSubmitted, toggleFeedbackSubmitted] = useToggle();
@@ -87,7 +91,7 @@ export default function Home() {
 
     useEffect(()=>{if(isApproved!==null) incStep()}, [isApproved]);
 
-    useEffect(()=>{if(TenureList) setTenure(TenureList[0].Months)}, [TenureList]);
+    useEffect(()=>{if(tenureAmountList) setTenure(tenureAmountList[0].Months)}, [tenureAmountList]);
 
     useEffect(()=>{
         fetchDetails(config.backendDetailsEndpoint + refID);
@@ -103,9 +107,8 @@ export default function Home() {
         toggleLoading();
           try {
             await backendServer.post(config.backendFeedbackEndpoint, {
-                'id': refID,
+                [config.backendPrimaryKey]: refID,
                 'ReasonForLoan': reason,
-                'Months': tenure,
                 'EmployeeReferralCode': referral,
                 'Feedback': rating,
             });
@@ -125,7 +128,7 @@ export default function Home() {
         currency: 'INR'
     }).format(amount);
 
-    const selectedTenureDetails = TenureList?.find((t) => t.Months === tenure);
+    const selectedTenureDetails = tenureAmountList?.find((t) => t.Months === tenure);
     const interest = `${selectedTenureDetails?.ROI || 1}%`;
     const emi = new Intl.NumberFormat('en-IN', {
         style: 'currency',
@@ -155,7 +158,7 @@ export default function Home() {
         }
     }
 
-    const tenureList = TenureList?.map((t) => {return { value: t.Months, label: `${t.Months}` }}) || [];
+    const tenureList = tenureAmountList?.map((t) => {return { value: t.Months, label: `${t.Months}` }}) || [];
     const values = isLoan ? [formattedAmount, tenure, interest, emi] : [`XXXX XXXX XXXX ${cardNo}`, mobile, new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR'
@@ -180,7 +183,7 @@ export default function Home() {
                         product, amount, setAmount, formattedAmount, toggleTNCAccepted, tncAccepted,
                         MinAmount: MinAmount, MaxAmount: MaxAmount, IntervalAmount: IntervalAmount, tenure, setTenure, emi, interest,
                         setApproved, isOTPPage: isOTPPage, mobile,
-                        tenureList, isLoan, values, otp, tncLink: PRODUCTS[productCode]?.tncLink,
+                        tenureList, isLoan, values, tncLink: PRODUCTS[ProductCode]?.tncLink,
                         feedbackSubmitted, refID, ROI: selectedTenureDetails?.ROI,
                         toggleLoading, setError, reason, setReason,
                         referral, setReferral, rating, setRating

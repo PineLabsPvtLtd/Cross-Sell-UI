@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import GlobalContext from 'contexts/globalContext';
 
 import { backendServer } from 'helpers/httpHelper';
-import { backendSubmitEndpoint } from 'configVariables';
+import { backendSubmitEndpoint, backendPrimaryKey } from 'configVariables';
 
 import OTPField from 'common/otpField';
 import TNC from 'common/tnc';
@@ -17,7 +17,7 @@ import TNC from 'common/tnc';
 export default function ConfirmDialogContents() {
     const { t } = useTranslation();
 
-    const { setApproved, product, amount, tenure, ROI, emi, values, isOTPPage, mobile, isLoan, otp, tncLink, toggleTNCAccepted, tncAccepted, refID, toggleLoading, setError } = useContext(GlobalContext);
+    const { setApproved, product, amount, tenure, ROI, emi, values, isOTPPage, mobile, isLoan, tncLink, toggleTNCAccepted, tncAccepted, refID, toggleLoading, setError } = useContext(GlobalContext);
 
     function FormRow({header, value}) {
         return (
@@ -36,30 +36,26 @@ export default function ConfirmDialogContents() {
       }
 
     const onOTPFilled = async (val) => {
-        if (val===otp) {
-          toggleLoading();
-          try {
-            await backendServer.post(backendSubmitEndpoint, {
-                'id': refID,
-                'AmountInPaisa': amount * 100,
-                'Months': tenure,
-                'ROI': ROI,
-                'MonthlyEMIAmountInPaisa': emi,
-                'OTP': otp,
-            });
-            setApproved(true);
-          } catch (err) {
-            if (err.status) {
-              setError(err.response?.body?.status?.message || `submitting failed`);
-            } else {
-              setError(`submitting failed`);
-            }
-            setApproved(false);
-          }
-          toggleLoading();
+      toggleLoading();
+      try {
+        await backendServer.post(backendSubmitEndpoint, {
+            [backendPrimaryKey]: refID,
+            'AmountInPaisa': amount * 100,
+            'Months': tenure,
+            'ROI': ROI,
+            'MonthlyEMIAmountInPaisa': emi,
+            'OTP': val,
+        });
+        setApproved(true);
+      } catch (err) {
+        if (err.status) {
+          setError(err.response?.body?.status?.message || `submitting failed`);
         } else {
-            setApproved(false);
+          setError(`submitting failed`);
         }
+        setApproved(false);
+      }
+      toggleLoading();
     }
 
     return <Fragment>
