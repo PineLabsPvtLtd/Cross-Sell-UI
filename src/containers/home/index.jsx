@@ -72,8 +72,8 @@ export default function Home() {
 
     const [
         fetchDetails, detailsLoading, 
-        {ProductCode, MinimumEligibleLoanAmount: MinAmount, MaximumEligibleLoanAmount: MaxAmount, IntervalAmountAllowedToChange: IntervalAmount, tenureAmountList, cardNo, mobile} 
-        = {ProductCode: 1, EntityID: 'HDFC', MinimumEligibleLoanAmount: 0, MaximumEligibleLoanAmount: 1000000, IntervalAmountAllowedToChange: 100000, tenureAmountList: [], cardNo: 1234, mobile: 9999999999},
+        {ProductCode, MinimumEligibleLoanAmount: MinAmount, MaximumEligibleLoanAmount: MaxAmount, IntervalAmountAllowedToChange: IntervalAmount, tenureAmountList, CardNumber: cardNo, MobileNumber: mobile, DisbursalMode, SBAccountNumber, EntityID} 
+        = {ProductCode: 1, EntityID: 'HDFC', MinimumEligibleLoanAmount: 0, MaximumEligibleLoanAmount: 1000000, IntervalAmountAllowedToChange: 100000, tenureAmountList: [], CardNumber: 1234, MobileNumber: 9999999999, DisbursalMode: "DD", SBAccountNumber: "1234"},
         detailsStatus, detailsError,
     ] = useFetch(true);
     const [fetchOTP, otpLoading, otp, otpStatus, otpError] = useFetch(true);
@@ -86,6 +86,7 @@ export default function Home() {
     const [loading, toggleLoading] = useToggle();
     // eslint-disable-next-line no-unused-vars
     const [error, setError] = useState(false);
+    const [referenceNo, setRefNo] = useState('');
 
     const [timeLeft, startTimer] = useCountdownTimer({onStart: toggleResendOTP, onEnd: toggleResendOTP, autoIncrementInterval: 5})
 
@@ -158,7 +159,7 @@ export default function Home() {
 
     const images = [<CongratsImage/>, null, <ConfirmImage className={classes.image}/>, <OTPImage className={classes.image}/>, isApproved === false ? <FailedImage/> : <CongratsImage/>];
     const titles = [t('common.congratulation'), t('customise.title'), t(`confirmation.title.${isLoan ? 'loan' : 'card'}`), t('otp.title'), isApproved === false ? t('common.failed') : t('common.congratulation')];
-    const citations = [t(`${product}.citation`), null, null, null, isApproved === false ? t(`${product}.failed`) : <Fragment>{t(`${product}.approvedPre`)} <b>{t(`${product}.approvedIn`, { amount: formattedAmount, tenure: tenure})}</b> {t(`${product}.approvedPost`)}</Fragment>];
+    const citations = [t(`${product}.citation`), null, null, null, isApproved === false ? t(`${product}.failed`) : <Fragment>{t(`${product}.approvedPre`)} <b>{t(`${product}.approvedIn`, { amount: formattedAmount, tenure: tenure})}</b> {t(`${product}.approvedPost`)} {isLoan && t(`disbursal.${DisbursalMode}.acknowledgement`)}<br/>{isLoan && t(`${product}.ref`, {ref: referenceNo})}<br/>{t(`${product}.login`, {entity: EntityID})}</Fragment>];
     const buttons = [t(`${product}.buttonText`), t('customise.buttonText'), t(`confirmation.proceedButtonText.${isLoan ? 'loan' : 'card'}`), t('otp.resend') + (timeLeft > 0 ? `(${timeLeft})` : ''), t('common.submit')]
     const buttonActions = [product === 'enhancement' ? overwriteStep.bind(null, CONFIRMATION_PAGE) : incStep, incStep, incStep, fetchOTP.bind(null, config.backendOTPEndpoint + refID), submitFeedback]
 
@@ -207,7 +208,8 @@ export default function Home() {
                         tenureList, isLoan, values, tncLink: PRODUCTS[ProductCode]?.tncLink,
                         feedbackSubmitted, refID, ROI: selectedTenureDetails?.ROI,
                         toggleLoading, setError, reason, setReason,
-                        referral, setReferral, rating, setRating
+                        referral, setReferral, rating, setRating,
+                        DisbursalMode, SBAccountNumber, setRefNo
                     }}
                     >
                         {getBodies()}

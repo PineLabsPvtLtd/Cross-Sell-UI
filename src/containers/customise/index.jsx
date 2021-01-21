@@ -64,7 +64,7 @@ export default function FormDialog() {
     const { t } = useTranslation();
     const classes = useStyles();
 
-    const { MinAmount, MaxAmount, IntervalAmount, amount, setAmount, tenure, setTenure, emi, tenureList, tncLink, toggleTNCAccepted, tncAccepted } = useContext(GlobalContext);
+    const { MinAmount, MaxAmount, IntervalAmount, amount, setAmount, tenure, setTenure, emi, tenureList, tncLink, toggleTNCAccepted, tncAccepted, DisbursalMode, SBAccountNumber, isLoan } = useContext(GlobalContext);
 
     const handleAmountChange = (event, newValue) => {
         setAmount(newValue);
@@ -140,9 +140,12 @@ export default function FormDialog() {
                 </Grid>
             </Grid>
             <Typography id="input-slider" align="center" gutterBottom>{t('customise.emi')}</Typography>
-            <Typography variant="h4" align="center">
+            <Typography variant="h4" align="center" gutterBottom>
                 {emi}
             </Typography>
+            {isLoan && <Typography align="center">
+                {t(`disbursal.${DisbursalMode}.citation`, {ac: SBAccountNumber})}
+            </Typography>}
             <TNC tncLink={tncLink} toggleTNCAccepted={toggleTNCAccepted} tncAccepted={tncAccepted}/>
         </Fragment>
     );

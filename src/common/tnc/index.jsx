@@ -25,7 +25,7 @@ export default function TNC({tncAccepted, toggleTNCAccepted, tncLink}) {
             }
             label={<div>
                 <span>I accept the </span>
-                <Link target="_blank" href={tncLink}>terms & conditions</Link>
+                <Link target="_blank" href={tncLink} underline="always">terms & conditions</Link>
             </div>}
         />
     );

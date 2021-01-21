@@ -17,7 +17,7 @@ import TNC from 'common/tnc';
 export default function ConfirmDialogContents() {
     const { t } = useTranslation();
 
-    const { setApproved, product, amount, MaxAmount, tenure, ROI, emi, values, isOTPPage, mobile, isLoan, tncLink, toggleTNCAccepted, tncAccepted, refID, toggleLoading, setError } = useContext(GlobalContext);
+    const { setApproved, product, amount, MaxAmount, tenure, ROI, emi, values, isOTPPage, mobile, isLoan, tncLink, toggleTNCAccepted, tncAccepted, refID, toggleLoading, setError, setRefNo } = useContext(GlobalContext);
 
     function FormRow({header, value}) {
         return (
@@ -50,7 +50,8 @@ export default function ConfirmDialogContents() {
             'AmountInPaisa': MaxAmount,
             'OTP': val,
           }
-        await backendServer.post(backendSubmitEndpoint, body);
+        const res = await backendServer.post(backendSubmitEndpoint, body);
+        setRefNo(res.body.LoanAccountNumber || '1234');
         setApproved(true);
       } catch (err) {
         if (err.status) {
