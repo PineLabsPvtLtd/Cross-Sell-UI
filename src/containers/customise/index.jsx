@@ -131,7 +131,7 @@ export default function FormDialog() {
                     <Slider
                         name='tenure'
                         value={typeof tenure === 'number' ? tenure : 0}
-                        max={tenureList[tenureList.length - 1].value}
+                        max={+tenureList[tenureList.length - 1].value}
                         marks={tenureList}
                         step={null}
                         onChange={handleTenureChange}

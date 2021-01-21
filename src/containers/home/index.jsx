@@ -92,7 +92,7 @@ export default function Home() {
 
     const [isApproved, setApproved] = useState(null);
 
-    const [amount, setAmount] = useState(60000000);
+    const [amount, setAmount] = useState(0);
     const [tenure, setTenure] = useState(null);
     const [reason, setReason] = useState(null);
     const [referral, setReferral] = useState(null);
@@ -109,7 +109,12 @@ export default function Home() {
 
     useEffect(()=>{if(isApproved!==null) incStep()}, [isApproved]);
 
-    useEffect(()=>{console.log(MinAmount, MaxAmount, IntervalAmount); if(tenureAmountList) setTenure(tenureAmountList[0].Months)}, [tenureAmountList]);
+    useEffect(()=>{
+        if(tenureAmountList?.length) {
+            setAmount(((+MaxAmount)+(+MinAmount))/2);
+            setTenure(+tenureAmountList[0].Months);
+        }
+    }, [tenureAmountList]);
 
     useEffect(()=>{
         fetchDetails(config.backendDetailsEndpoint + refID);
@@ -150,12 +155,14 @@ export default function Home() {
         currency: 'INR'
     }).format(MaxAmount/100);
 
-    const selectedTenureDetails = tenureAmountList?.find((t) => t.Months === tenure);
+    const selectedTenureDetails = tenureAmountList?.find((t) => +t.Months === tenure);
     const interest = `${+selectedTenureDetails?.ROI/100 || 1}%`;
     const emi = new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR'
         }).format(emiCalculator(amount/100, (+selectedTenureDetails?.ROI)/120000 || 1, tenure))
+
+    useEffect(()=>{console.log(amount, tenure, selectedTenureDetails?.ROI, emi)}, [tenure])
 
     const images = [<CongratsImage/>, null, <ConfirmImage className={classes.image}/>, <OTPImage className={classes.image}/>, isApproved === false ? <FailedImage/> : <CongratsImage/>];
     const titles = [t('common.congratulation'), t('customise.title'), t(`confirmation.title.${isLoan ? 'loan' : 'card'}`), t('otp.title'), isApproved === false ? t('common.failed') : t('common.congratulation')];
@@ -180,7 +187,7 @@ export default function Home() {
         }
     }
 
-    const tenureList = tenureAmountList?.map((t) => {return { value: t.Months, label: `${t.Months}` }}) || [];
+    const tenureList = tenureAmountList?.map((t) => {return { value: +t.Months, label: `${+t.Months}` }}) || [];
     const values = isLoan ? [formattedAmount, tenure, interest, emi] : [`XXXX XXXX XXXX ${cardNo}`, mobile, new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR'
@@ -230,6 +237,6 @@ export default function Home() {
                     </Grid>}
                 </Grid>
             </div>
-        </Container> : <ErrorPage message={detailsError} showButton redirectLink={`/${refID}`} buttonText="Refresh"/>
+        </Container> : <ErrorPage type="error" message={detailsError} showButton redirectLink={`/${refID}`} buttonText="Refresh"/>
     );
 }
