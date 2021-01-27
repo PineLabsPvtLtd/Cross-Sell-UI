@@ -23,7 +23,7 @@ const SPACEBAR = 32;
  * @since 1.0.0
  * Inspired from https://www.npmjs.com/package/react-otp-input
  */
-export default function OTPField({ isNumeric=true, isSecure=false, otpLength=6, disabled=false, onFilled=console.log, onChange=()=>{} }) {
+export default function OTPField({ isNumeric=true, isSecure=false, otpLength=4, disabled=false, onFilled=console.log, onChange=()=>{} }) {
     const classes = useStyles();
 
     const [otp, setOTP] = useState((new Array(otpLength)).fill(''));
