@@ -1,0 +1,84 @@
+{
+    "common": {
+        "welcome": "Welcome Aboard!",
+        "congratulation": "Congratulations!!",
+        "failed": "Failed!!",
+        "submit": "Submit"
+    },
+    "errors": {
+        "404": "Page not found"
+    },
+    "jumbo": {
+        "title": "Jumbo Loan",
+        "citation": "You may choose to apply for and avail a pre approved Jumbo loan of up to",
+        "approvedPre": "Jumbo Loan of",
+        "approvedIn": "{{amount}} for {{tenure}} Months",
+        "approvedPost": "has been approved.",
+        "ref": "Loan Ref Number: {{ref}}",
+        "login": "Please login to {{entity}} Bank net banking for more details",
+        "failed": "You request for Jumbo Loan has failed. Please contact branch for further details",
+        "buttonText": "Customise"
+    },
+    "insta": {
+        "title": "Insta Loan",
+        "citation": "You may choose to apply for and avail a pre approved Insta loan of up to",
+        "approvedPre": "Insta Loan of",
+        "approvedIn": "{{amount}} for {{tenure}} Months",
+        "approvedPost": "has been approved.",
+        "ref": "Loan Ref Number: {{ref}}.",
+        "login": "Please login to {{entity}} Bank net banking for more details",
+        "failed": "You request for Insta Loan has failed. Please contact branch for further details",
+        "buttonText": "Customise"
+    },
+    "enhancement": {
+        "title": "Limit Enhancement",
+        "citation": "Your card is Pre-Approved for Credit Limit increase to amount {{amount}}",
+        "approvedPre": "Your credit limit on your Credit Card has been increased to",
+        "approvedIn": "{{amount}}",
+        "approvedPost": "Thank you for your continued patronage.",
+        "login": "Please login to {{entity}} Bank net banking for more details",
+        "failed": "You request for credit limit enhancement has failed. Please contact branch for further details",
+        "buttonText": "Let's proceed"
+    },
+    "customise": {
+        "title": "Customise your loan amount & EMI",
+        "amount": "Select Loan Amount",
+        "tenure": "Select Tenure",
+        "emi": "Your EMI/Month will be*",
+        "buttonText": "Submit"
+    },
+    "confirmation": {
+        "title": { "loan": "Great! Let's confirm what you selected", "card": "Confirmation"},
+        "proceed": "Proceed to apply for loan",
+        "proceedButtonText": { "loan": "Let's proceed", "card": "Increase my limit"},
+        "reviewButtonText": "LET'S REVIEW",
+        "headers": {
+            "loan": ["Loan Value", "Tenure", "Interest", "EMI"],
+            "card": ["Card No.", "Mobile No.", "Eligible Limit"]
+        }
+    },
+    "otp": {
+        "title": "Enter OTP",
+        "citation": "Please enter the OTP sent to your registered mobile number {{mobile}} to confirm the {{type}} application. You have {{attempts}} attempts left to request for new OTP.",
+        "resend": "Resend OTP"
+    },
+    "currency": "₹",
+    "feedback": {
+        "reason": { "loan": "Reason for Loan", "card": "Reason for limit enhancement"},
+        "referral": "Employee Referral Code",
+        "feedback": "Feedback",
+        "thanks": "Thank you for your valuable feedback"
+    },
+    "disbursal": {
+        "SB": { 
+            "title": "Savings Bank Account", 
+            "citation": "Loan amount will be deposited in your SB Account ****{{ac}}",
+            "acknowledgement": "Loan amount will be disbursed to your {{entity}} Bank Savings Account."
+        },
+        "DD": {
+            "title": "DD", 
+            "citation": "A DD will be sent your registered Credit Card address",
+            "acknowledgement": "DD will be sent to your registered {{entity}} Bank Credit Card address within 7 workings."
+        }
+    }
+}
