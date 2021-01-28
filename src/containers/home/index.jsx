@@ -84,13 +84,12 @@ export default function Home() {
     const isLoan = ['jumbo', 'insta'].includes(product);
 
     const [feedbackSubmitted, toggleFeedbackSubmitted] = useToggle();
-    const [resendOTPenabled, toggleResendOTP] = useToggle();
+    const [resendOTPenabled, toggleResendOTP] = useToggle(true);
     const [tncAccepted, toggleTNCAccepted] = useToggle();
     const [loading, toggleLoading] = useToggle();
     // eslint-disable-next-line no-unused-vars
     const [error, setError] = useState(false);
     const [referenceNo, setRefNo] = useState('');
-    const [isButtonClicked, setIsButtonClicked] = useState(false);
 
     const [timeLeft, startTimer, retryCount] = useCountdownTimer({
         onStart: toggleResendOTP, 
@@ -114,7 +113,6 @@ export default function Home() {
         if(error) {
             enqueueSnackbar(error, { 
                 variant: 'error',
-                preventDuplicate: true,
             });
         }
     }, [error]);
@@ -133,14 +131,11 @@ export default function Home() {
     }, []);
 
     useEffect(()=> {
-        if(!otpLoading && !isButtonClicked) toggleResendOTP();
         if(otpError) setError(otpError);
+        if(!otpLoading && otpResponse.ResponseCode == '1' && !isOTPPage) incStep();
     }, [otpLoading])
 
-    useEffect(()=>{if(isOTPPage) fetchOTP(config.backendOTPEndpoint + refID)}, [isOTPPage]);
-
     const onResendClick = () => {
-        setIsButtonClicked(true);
         fetchOTP(config.backendOTPEndpoint + refID);
         startTimer();
     }
@@ -181,7 +176,7 @@ export default function Home() {
     const titles = [t('common.congratulation'), t('customise.title'), t(`confirmation.title.${isLoan ? 'loan' : 'card'}`), t('otp.title'), isApproved === false ? t('common.failed') : t('common.congratulation')];
     const citations = [t(`${product}.citation`), null, null, null, isApproved === false ? t(`${product}.failed`) : <Fragment>{t(`${product}.approvedPre`)} <b>{t(`${product}.approvedIn`, { amount: formattedAmount, tenure: tenure})}</b> {t(`${product}.approvedPost`)} {isLoan && t(`disbursal.${DisbursalMode}.acknowledgement`)}<br/>{isLoan && t(`${product}.ref`, {ref: referenceNo})}<br/>{t(`${product}.login`, {entity: EntityName})}</Fragment>];
     const buttons = [t(`${product}.buttonText`), t('customise.buttonText'), t(`confirmation.proceedButtonText.${isLoan ? 'loan' : 'card'}`), t('otp.resend') + (timeLeft > 0 && attempts > 0 ? `(${timeLeft})` : ''), t('common.submit')]
-    const buttonActions = [product === 'enhancement' ? overwriteStep.bind(null, CONFIRMATION_PAGE) : incStep, incStep, incStep, onResendClick, submitFeedback]
+    const buttonActions = [product === 'enhancement' ? overwriteStep.bind(null, CONFIRMATION_PAGE) : incStep, incStep, fetchOTP.bind(null, config.backendOTPEndpoint + refID), onResendClick, submitFeedback]
 
     const getBodies = () => {
         switch (step) {
